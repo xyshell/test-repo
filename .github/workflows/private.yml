@@ -1,0 +1,20 @@
+name: Private
+on:
+  push:
+    branches:
+    - 'private*'
+    - 'private*/**'
+
+jobs:
+  disallow_private_branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Failed private branch pushes
+        run: |
+          __msg="::error::This branch ${GITHUB_REF_NAME} includes [private]; please don't use that in branch names
+          Please rename the local branch with
+              git checkout ${GITHUB_REF_NAME}
+              git branch -m name_without_private
+          echo "$__msg"
+          echo ::set-output name=status::failure
+          exit 1
